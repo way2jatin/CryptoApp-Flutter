@@ -16,9 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       theme: new ThemeData(
-          primarySwatch: Colors.pink,
+          primarySwatch: Colors.orange,
           primaryColor: defaultTargetPlatform == TargetPlatform.iOS
-              ? Colors.grey[100]
+              ? Colors.orange
               : null),
       home: new HomePage(),
     );

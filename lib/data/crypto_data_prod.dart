@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:fluttercrypto/data/crypto_data.dart';
 
 class ProdCryptoRepository implements CryptoRepository {
-  String cryptoUrl = "https://api.coinmarketcap.com/v1/ticker/?limit=10";
+  String cryptoUrl = "https://api.coinmarketcap.com/v1/ticker/?limit=50";
   @override
   Future<List<Crypto>> fetchCurrencies() async {
     // TODO: implement fetchCurrencies

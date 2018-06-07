@@ -5,6 +5,8 @@ import 'package:fluttercrypto/data/crypto_data.dart';
 import 'package:fluttercrypto/modules/crypto_presenter.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:fluttercrypto/LineChart.dart';
+import 'package:fluttercrypto/ChartsPage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -72,6 +74,13 @@ class _HomePageState extends State<HomePage> implements CryptoListViewContract {
       subtitle:
           _getSubtitleText(currency.price_usd, currency.percent_change_1h),
       isThreeLine: true,
+      onTap: () {
+        Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => new ChartsPage(currency.name.toLowerCase())),
+        );
+      },
     );
   }
 
@@ -108,5 +117,19 @@ class _HomePageState extends State<HomePage> implements CryptoListViewContract {
   @override
   void onLoadCryptoError() {
     // TODO: implement onLoadCryptoError
+  }
+}
+
+class DetailPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text("Detail page"),
+      ),
+      body: new Center(
+        child: new Text("Detail detail detail"),
+      ),
+    );
   }
 }
