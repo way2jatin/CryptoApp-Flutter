@@ -1,12 +1,8 @@
-import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttercrypto/ChartsPage.dart';
 import 'package:fluttercrypto/data/crypto_data.dart';
 import 'package:fluttercrypto/modules/crypto_presenter.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
-import 'package:fluttercrypto/LineChart.dart';
-import 'package:fluttercrypto/ChartsPage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -78,7 +74,7 @@ class _HomePageState extends State<HomePage> implements CryptoListViewContract {
         Navigator.push(
           context,
           new MaterialPageRoute(
-              builder: (context) => new ChartsPage(currency.name.toLowerCase())),
+              builder: (context) => new ChartsPage(currency.name.toLowerCase(),currency.id)),
         );
       },
     );

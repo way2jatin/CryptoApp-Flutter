@@ -1,9 +1,5 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
-import 'package:fluttercrypto/dependency_injection.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:fluttercrypto/dependency_injection.dart';
 import 'package:fluttercrypto/home_page.dart';
 
 void main() async {
@@ -15,12 +11,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      theme: new ThemeData(
-          primarySwatch: Colors.orange,
-          primaryColor: defaultTargetPlatform == TargetPlatform.iOS
-              ? Colors.orange
-              : null),
-      home: new HomePage(),
+        theme: new ThemeData(
+            primarySwatch: Colors.orange),
+        home: new HomePage()
     );
   }
 }

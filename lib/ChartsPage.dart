@@ -1,18 +1,21 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class ChartsPage extends StatefulWidget{
 
-  String coinName;
+  final String coinName;
+  final String coinId;
 
-  ChartsPage(this.coinName);
+  ChartsPage(this.coinName,this.coinId);
 
   @override
   State<StatefulWidget> createState() {
-    return new ChartsState(coinName);
+    return new ChartsState(coinName,coinId);
   }
 
 }
@@ -25,16 +28,15 @@ class ChartsState extends State<ChartsPage>{
 
   List<charts.Series> seriesList;
   String coinName;
+  String coinId;
 
-  ChartsState(this.coinName);
+  ChartsState(this.coinName,this.coinId);
 
   _fetchData() async {
-    print("Attempting to fetch data from network");
-
     var endTime = new DateTime.now();
-    var startTime = endTime.subtract(new Duration(days: 365));
+    var startTime = endTime.subtract(new Duration(hours: 24));
 
-    final url = "https://graphs2.coinmarketcap.com/currencies/"+coinName+"/"+startTime.millisecondsSinceEpoch.toString()+"/"+endTime.millisecondsSinceEpoch.toString()+"/";
+    final url = "https://graphs2.coinmarketcap.com/currencies/"+coinId+"/"+startTime.millisecondsSinceEpoch.toString()+"/"+endTime.millisecondsSinceEpoch.toString()+"/";
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -45,25 +47,27 @@ class ChartsState extends State<ChartsPage>{
       setState(() {
         _isLoading = false;
         this.graphData = videosJson;
-        print(graphData);
         seriesList = _createData(graphData);
       });
     }
   }
 
-   @override
-     void initState() {
-       // TODO: implement initState
-       super.initState();
-       _fetchData();
-     }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _fetchData();
+  }
 
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      theme: new ThemeData(
+          primarySwatch: Colors.orange),
       home: new Scaffold(
         appBar: new AppBar(
-          title: new Text(coinName.toUpperCase()),
+          title: new Text(capitalize(coinName)),
+          elevation: defaultTargetPlatform == TargetPlatform.iOS ? 0.0 : 5.0,
           actions: <Widget>[
             new IconButton(
               icon: new Icon(Icons.refresh),
@@ -77,12 +81,20 @@ class ChartsState extends State<ChartsPage>{
             )
           ],
         ),
-          body: new Center(
-//              padding: const EdgeInsets.all(8.0),
+        body: new Padding(padding: const EdgeInsets.only(left:16.0,bottom: 20.0,right: 16.0,top: 10.0),
+            child: new Center(
               child: _isLoading ? new CircularProgressIndicator()
-              : new charts.TimeSeriesChart(seriesList,
-                  defaultRenderer: new charts.LineRendererConfig(includePoints: false)))
-      ),
+                  : new charts.TimeSeriesChart(seriesList,
+                primaryMeasureAxis: new charts.NumericAxisSpec(
+                    tickProviderSpec: new charts.BasicNumericTickProviderSpec(zeroBound: false,dataIsInWholeNumbers: false),
+                    tickFormatterSpec: new charts.BasicNumericTickFormatterSpec(new NumberFormat.compactSimpleCurrency())
+                ),domainAxis: new charts.DateTimeAxisSpec(
+                    tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
+                        month: new charts.TimeFormatterSpec(
+                            format: 'MMM', transitionFormat: 'MMM'))),
+              ) ,
+            )
+        ),),
     );
   }
 
@@ -96,18 +108,20 @@ class ChartsState extends State<ChartsPage>{
 
     return [
       new charts.Series<LinearSales, DateTime>(
-        id: 'Sales',
+        id: 'Chart',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-          domainFn: (LinearSales sales, _) => sales.year,
-          measureFn: (LinearSales sales, _) => sales.sales,
-          data: chartData,
+        domainFn: (LinearSales sales, _) => sales.year,
+        measureFn: (LinearSales sales, _) => sales.sales,
+        data: chartData,
       )
     ];
   }
 
   static DateTime getFormattedDate(data) {
-    return new DateTime.fromMicrosecondsSinceEpoch(data);
+    return new DateTime.fromMillisecondsSinceEpoch(data);
   }
+
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
 }
 
