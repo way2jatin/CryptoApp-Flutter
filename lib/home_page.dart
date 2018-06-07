@@ -50,8 +50,12 @@ class _HomePageState extends State<HomePage> implements CryptoListViewContract {
           child: new ListView.builder(
             itemCount: _currencies.length,
             itemBuilder: (BuildContext context, int index) {
-              final Crypto currency = _currencies[index];
-              final MaterialColor color = _colors[index % _colors.length];
+              final int i = index ~/ 2;
+              final Crypto currency = _currencies[i];
+              final MaterialColor color = _colors[i % _colors.length];
+              if (index.isOdd) {
+                return new Divider();
+              }
               return _getListItemUi(currency, color);
             },
           ),
