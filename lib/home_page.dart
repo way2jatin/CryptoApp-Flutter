@@ -35,40 +35,38 @@ class _HomePageState extends State<HomePage> implements CryptoListViewContract {
         ),
         body: _isLoading
             ? new Center(
-                child: new CircularProgressIndicator(),
-              )
-            : _cryptoWidget());
-  }
-
-  Widget _cryptoWidget() {
-    return new Container(
-        child: new Column(
-      children: <Widget>[
-        new Flexible(
-          child: new ListView.builder(
-            itemCount: _currencies.length,
-            itemBuilder: (BuildContext context, int index) {
-              final int i = index ~/ 2;
-              final Crypto currency = _currencies[i];
-              final MaterialColor color = _colors[i % _colors.length];
-              if (index.isOdd) {
-                return new Divider();
-              }
-              return _getListItemUi(currency, color);
-            },
-          ),
+          child: new CircularProgressIndicator(),
         )
-      ],
-    ));
+            :new ListView.builder(
+          itemCount: _currencies.length,
+          itemBuilder: (BuildContext context,int index)=>
+              _getRowWithDivider(index),)
+    );
   }
 
-  ListTile _getListItemUi(Crypto currency, MaterialColor color) {
+  Widget _getRowWithDivider(int i) {
+    final Crypto currency = _currencies[i];
+    var children = <Widget>[
+      new Padding(
+          padding: new EdgeInsets.all(10.0),
+          child: _getListItemUi(currency)
+      ),
+      new Divider(height: 5.0),
+    ];
+
+    return new Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children,
+    );
+  }
+
+  ListTile _getListItemUi(Crypto currency) {
     return new ListTile(
       leading: new Image.network("http://cryptoicons.co/32@2x/color/"+currency.symbol.toLowerCase()+"@2x.png"),
       title: new Text(currency.name,
           style: new TextStyle(fontWeight: FontWeight.bold)),
       subtitle:
-          _getSubtitleText(currency.price_usd, currency.percent_change_1h),
+      _getSubtitleText(currency.price_usd, currency.percent_change_1h),
       isThreeLine: true,
       onTap: () {
         Navigator.push(
