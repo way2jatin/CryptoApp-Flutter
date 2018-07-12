@@ -90,6 +90,10 @@ class ChartsState extends State<ChartsPage>{
         appBar: new AppBar(
           title: new Text(capitalize(coinName)),
           elevation: defaultTargetPlatform == TargetPlatform.iOS ? 0.0 : 5.0,
+          leading: new IconButton(icon: new Icon(Icons.arrow_back),
+              onPressed: (){
+                Navigator.pop(context);
+              }),
           actions: <Widget>[
             new IconButton(
               icon: new Icon(Icons.refresh),
@@ -100,7 +104,7 @@ class ChartsState extends State<ChartsPage>{
                 });
                 _fetchData();
               },
-            )
+            ),
           ],
         ),
         body: new Padding(padding: const EdgeInsets.only(left:10.0,bottom: 20.0,right: 16.0,top: 10.0),
